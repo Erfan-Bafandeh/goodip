@@ -1,14 +1,13 @@
-from .connection_check import connection_check
+from .exceptions import *
 from bs4 import BeautifulSoup
 from requests import get
-from sys import exit
 
 class ip:
     def __init__(self):
-        if connection_check() == False:
-            print("please turn on your internet :|")
-            exit()
-        response = get("https://browserleaks.com/ip").text
+        try:
+            response = get("https://browserleaks.com/ip").text
+        except:
+            raise ConnectionError("Check your network connection . . .")
         html = BeautifulSoup(response, "html.parser")
         self.ip = html.find_all("span", {"class":"flag-text wball"})[0].text
         self.country = html.find_all("tbody")[0].find_all("tr")[4].find_all("td")[1].span.text
